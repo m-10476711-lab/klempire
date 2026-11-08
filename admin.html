@@ -1,0 +1,179 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KL EMPIRE | Admin Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#071a35;color:#fff;min-height:100vh}
+header{padding:20px 5%;background:#102b50;border-bottom:1px solid #24466d;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.logo{font-size:22px;font-weight:900;color:#70afff}
+button{background:#1769ff;color:white;border:0;padding:11px 17px;border-radius:9px;cursor:pointer;font-weight:bold}
+main{padding:30px 5%;max-width:1200px;margin:auto}
+h1{font-size:30px;margin-bottom:8px}
+.sub{color:#9db4d3;margin-bottom:28px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px}
+.card{background:#102b50;border:1px solid #24466d;padding:22px;border-radius:15px}
+.card small{color:#9db4d3}
+.card h2{font-size:27px;margin-top:12px;color:#70afff}
+.section{margin-top:30px}
+.section h2{margin-bottom:15px}
+table{width:100%;border-collapse:collapse;min-width:600px}
+th,td{text-align:left;padding:13px;border-bottom:1px solid #24466d;font-size:13px}
+th{color:#70afff}
+.table-wrap{overflow-x:auto}
+.status{color:#70afff}
+#message{margin-top:15px;color:#ffb4b4}
+@media(max-width:600px){header{padding:16px 5%}h1{font-size:24px}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">KL EMPIRE <span style="font-size:11px">ADMIN</span></div>
+  <button id="logout">Logout</button>
+</header>
+
+<main>
+  <h1>Admin Dashboard</h1>
+  <p class="sub">Manage your KL EMPIRE digital services ecosystem.</p>
+
+  <div class="grid">
+    <div class="card">
+      <small>Total Users</small>
+      <h2 id="users">—</h2>
+    </div>
+    <div class="card">
+      <small>Total Products</small>
+      <h2 id="products">—</h2>
+    </div>
+    <div class="card">
+      <small>Total Orders</small>
+      <h2 id="orders">—</h2>
+    </div>
+    <div class="card">
+      <small>Admin Account</small>
+      <h2 style="font-size:19px">ACTIVE</h2>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Recent Orders</h2>
+    <div class="card table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>User ID</th>
+            <th>Status</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody id="orderList">
+          <tr><td colspan="4">Loading orders...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <p id="message"></p>
+</main>
+
+<script>
+const { createClient } = supabase;
+const db = createClient(
+  window.KL_CONFIG.SUPABASE_URL,
+  window.KL_CONFIG.SUPABASE_KEY
+);
+
+async function init(){
+  const {data:{session},error} = await db.auth.getSession();
+
+  if(error || !session){
+    location.href = "login.html";
+    return;
+  }
+
+  const {data:profile,error:profileError} = await db
+    .from("profiles")
+    .select("account_role")
+    .eq("id",session.user.id)
+    .single();
+
+  if(profileError || profile?.account_role !== "admin"){
+    document.getElementById("message").textContent =
+      "Access denied. Admin account required.";
+    await db.auth.signOut();
+    setTimeout(()=>location.href="login.html",1500);
+    return;
+  }
+
+  await loadStats();
+}
+
+async function loadStats(){
+  const message = document.getElementById("message");
+
+  const [users,products,orders] = await Promise.all([
+    db.from("profiles").select("*",{count:"exact",head:true}),
+    db.from("products").select("*",{count:"exact",head:true}),
+    db.from("orders").select("*",{count:"exact",head:true})
+  ]);
+
+  document.getElementById("users").textContent =
+    users.error ? "—" : users.count;
+
+  document.getElementById("products").textContent =
+    products.error ? "—" : products.count;
+
+  document.getElementById("orders").textContent =
+    orders.error ? "—" : orders.count;
+
+  const result = await db
+    .from("orders")
+    .select("id,user_id,status,created_at")
+    .order("created_at",{ascending:false})
+    .limit(10);
+
+  const list = document.getElementById("orderList");
+
+  if(result.error){
+    list.innerHTML = "<tr><td colspan='4'>Unable to load orders. Check database permissions.</td></tr>";
+    message.textContent = result.error.message;
+    return;
+  }
+
+  if(!result.data.length){
+    list.innerHTML = "<tr><td colspan='4'>No orders yet.</td></tr>";
+    return;
+  }
+
+  list.innerHTML = result.data.map(order=>`
+    <tr>
+      <td>${escapeHTML(String(order.id))}</td>
+      <td>${escapeHTML(String(order.user_id || "—").slice(0,12))}</td>
+      <td class="status">${escapeHTML(order.status || "Pending")}</td>
+      <td>${order.created_at ? new Date(order.created_at).toLocaleDateString() : "—"}</td>
+    </tr>
+  `).join("");
+}
+
+function escapeHTML(value){
+  return value.replace(/[&<>"']/g,char=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  })[char]);
+}
+
+document.getElementById("logout").addEventListener("click",async()=>{
+  await db.auth.signOut();
+  location.href="login.html";
+});
+
+init();
+</script>
+</body>
+</html>
