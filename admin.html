@@ -5,40 +5,70 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>KL EMPIRE | Admin Dashboard</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Arial,sans-serif;background:#071a35;color:#fff;min-height:100vh}
-header{padding:20px 5%;background:#102b50;border-bottom:1px solid #24466d;display:flex;justify-content:space-between;align-items:center;gap:12px}
+header{padding:18px 5%;background:#102b50;border-bottom:1px solid #24466d;display:flex;justify-content:space-between;align-items:center}
 .logo{font-size:22px;font-weight:900;color:#70afff}
-button{background:#1769ff;color:white;border:0;padding:11px 17px;border-radius:9px;cursor:pointer;font-weight:bold}
-main{padding:30px 5%;max-width:1200px;margin:auto}
-h1{font-size:30px;margin-bottom:8px}
-.sub{color:#9db4d3;margin-bottom:28px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px}
-.card{background:#102b50;border:1px solid #24466d;padding:22px;border-radius:15px}
+main{padding:30px 5%;max-width:1250px;margin:auto}
+h1{font-size:29px;margin-bottom:8px}
+.sub{color:#9db4d3;margin-bottom:25px}
+button{background:#1769ff;color:white;border:0;padding:11px 16px;border-radius:8px;cursor:pointer;font-weight:bold}
+button:hover{opacity:.85}
+.logout{background:#344b69}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px}
+.card{background:#102b50;border:1px solid #24466d;padding:20px;border-radius:14px}
 .card small{color:#9db4d3}
-.card h2{font-size:27px;margin-top:12px;color:#70afff}
+.card h2{font-size:27px;margin-top:10px;color:#70afff}
 .section{margin-top:30px}
-.section h2{margin-bottom:15px}
-table{width:100%;border-collapse:collapse;min-width:600px}
+.section-title{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:15px;flex-wrap:wrap}
+.section-title h2{font-size:21px}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:760px}
 th,td{text-align:left;padding:13px;border-bottom:1px solid #24466d;font-size:13px}
 th{color:#70afff}
-.table-wrap{overflow-x:auto}
-.status{color:#70afff}
-#message{margin-top:15px;color:#ffb4b4}
-@media(max-width:600px){header{padding:16px 5%}h1{font-size:24px}}
+.status{color:#70afff;font-weight:bold}
+.actions{display:flex;gap:7px;flex-wrap:wrap}
+.actions button{padding:8px 10px;font-size:12px}
+.edit{background:#1769ff}
+.delete{background:#c0394b}
+.toggle{background:#526b88}
+.form-card{background:#102b50;border:1px solid #24466d;padding:22px;border-radius:14px;margin-bottom:20px;display:none}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.field{display:flex;flex-direction:column;gap:7px}
+.field.full{grid-column:1/-1}
+label{font-size:13px;color:#b9cce5}
+input,select,textarea{width:100%;padding:12px;background:#071a35;color:#fff;border:1px solid #31547b;border-radius:8px;outline:none}
+textarea{min-height:85px;resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:#70afff}
+.form-actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+.check-row{display:flex;align-items:center;gap:9px}
+.check-row input{width:auto}
+#message{margin-top:15px;color:#70afff;word-break:break-word}
+.empty{text-align:center;color:#9db4d3;padding:20px}
+@media(max-width:600px){
+ main{padding:22px 4%}
+ h1{font-size:24px}
+ .form-grid{grid-template-columns:1fr}
+ .field.full{grid-column:auto}
+ header{padding:16px 4%}
+}
 </style>
 </head>
+
 <body>
 
 <header>
   <div class="logo">KL EMPIRE <span style="font-size:11px">ADMIN</span></div>
-  <button id="logout">Logout</button>
+  <button class="logout" id="logout">Logout</button>
 </header>
 
 <main>
+
   <h1>Admin Dashboard</h1>
   <p class="sub">Manage your KL EMPIRE digital services ecosystem.</p>
 
@@ -47,22 +77,136 @@ th{color:#70afff}
       <small>Total Users</small>
       <h2 id="users">—</h2>
     </div>
+
     <div class="card">
       <small>Total Products</small>
       <h2 id="products">—</h2>
     </div>
+
     <div class="card">
       <small>Total Orders</small>
       <h2 id="orders">—</h2>
     </div>
+
     <div class="card">
       <small>Admin Account</small>
       <h2 style="font-size:19px">ACTIVE</h2>
     </div>
   </div>
 
-  <div class="section">
-    <h2>Recent Orders</h2>
+  <!-- PRODUCT MANAGEMENT -->
+  <section class="section">
+
+    <div class="section-title">
+      <h2>Product Management</h2>
+      <button id="addProductBtn">+ Add Product</button>
+    </div>
+
+    <div class="form-card" id="productFormCard">
+
+      <h2 id="formTitle">Add New Product</h2>
+
+      <form id="productForm">
+
+        <input type="hidden" id="productId">
+
+        <div class="form-grid" style="margin-top:18px">
+
+          <div class="field">
+            <label>Product Name *</label>
+            <input id="productName" required maxlength="150"
+              placeholder="Example: MLBB Diamonds">
+          </div>
+
+          <div class="field">
+            <label>SKU</label>
+            <input id="productSku" maxlength="100"
+              placeholder="Example: MLBB-86">
+          </div>
+
+          <div class="field">
+            <label>Base Price (MYR) *</label>
+            <input id="productPrice" type="number"
+              min="0" step="0.01" required placeholder="10.00">
+          </div>
+
+          <div class="field">
+            <label>Currency</label>
+            <select id="productCurrency">
+              <option value="MYR">MYR</option>
+            </select>
+          </div>
+
+          <div class="field full">
+            <label>Category</label>
+            <select id="productCategory">
+              <option value="">No Category</option>
+            </select>
+          </div>
+
+          <div class="field full">
+            <label>Description</label>
+            <textarea id="productDescription"
+              placeholder="Product description..."></textarea>
+          </div>
+
+          <div class="field full">
+            <label>Image URL</label>
+            <input id="productImage" type="url"
+              placeholder="https://example.com/image.jpg">
+          </div>
+
+          <div class="field full">
+            <label>Provider Code</label>
+            <input id="providerCode"
+              placeholder="Optional provider product code">
+          </div>
+
+          <div class="field full">
+            <label class="check-row">
+              <input type="checkbox" id="productActive" checked>
+              Product Active
+            </label>
+          </div>
+
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" id="saveProductBtn">Save Product</button>
+          <button type="button" class="logout" id="cancelForm">Cancel</button>
+        </div>
+
+      </form>
+    </div>
+
+    <div class="card table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>SKU</th>
+            <th>Price</th>
+            <th>Category</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody id="productList">
+          <tr><td colspan="6" class="empty">Loading products...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </section>
+
+  <!-- RECENT ORDERS -->
+  <section class="section">
+
+    <div class="section-title">
+      <h2>Recent Orders</h2>
+    </div>
+
     <div class="card table-wrap">
       <table>
         <thead>
@@ -73,107 +217,354 @@ th{color:#70afff}
             <th>Date</th>
           </tr>
         </thead>
+
         <tbody id="orderList">
-          <tr><td colspan="4">Loading orders...</td></tr>
+          <tr><td colspan="4" class="empty">Loading orders...</td></tr>
         </tbody>
       </table>
     </div>
-  </div>
+
+  </section>
 
   <p id="message"></p>
+
 </main>
 
 <script>
-const { createClient } = supabase;
-const db = createClient(
+const db = supabase.createClient(
   window.KL_CONFIG.SUPABASE_URL,
   window.KL_CONFIG.SUPABASE_KEY
 );
 
+let currentUser = null;
+let categories = [];
+
+const $ = id => document.getElementById(id);
+
+function escapeHTML(value){
+  return String(value ?? "").replace(/[&<>"']/g,char=>({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  })[char]);
+}
+
+function showMessage(message,color="#70afff"){
+  $("message").style.color=color;
+  $("message").textContent=message;
+}
+
 async function init(){
+
   const {data:{session},error} = await db.auth.getSession();
 
   if(error || !session){
-    location.href = "login.html";
+    location.href="login.html";
     return;
   }
+
+  currentUser=session.user;
 
   const {data:profile,error:profileError} = await db
     .from("profiles")
     .select("account_role")
-    .eq("id",session.user.id)
+    .eq("id",currentUser.id)
     .single();
 
-  if(profileError || profile?.account_role !== "admin"){
-    document.getElementById("message").textContent =
-      "Access denied. Admin account required.";
+  if(profileError || profile?.account_role!=="admin"){
+    showMessage("Access denied. Admin account required.","#ff7777");
     await db.auth.signOut();
     setTimeout(()=>location.href="login.html",1500);
     return;
   }
 
-  await loadStats();
+  await Promise.all([
+    loadStats(),
+    loadCategories(),
+    loadProducts(),
+    loadOrders()
+  ]);
 }
 
 async function loadStats(){
-  const message = document.getElementById("message");
 
-  const [users,products,orders] = await Promise.all([
+  const [users,products,orders]=await Promise.all([
     db.from("profiles").select("*",{count:"exact",head:true}),
     db.from("products").select("*",{count:"exact",head:true}),
     db.from("orders").select("*",{count:"exact",head:true})
   ]);
 
-  document.getElementById("users").textContent =
-    users.error ? "—" : users.count;
+  $("users").textContent=users.error?"—":users.count;
+  $("products").textContent=products.error?"—":products.count;
+  $("orders").textContent=orders.error?"—":orders.count;
+}
 
-  document.getElementById("products").textContent =
-    products.error ? "—" : products.count;
+async function loadCategories(){
 
-  document.getElementById("orders").textContent =
-    orders.error ? "—" : orders.count;
+  const {data,error}=await db
+    .from("categories")
+    .select("id,name,is_active")
+    .eq("is_active",true)
+    .order("name");
 
-  const result = await db
+  if(error){
+    showMessage("Category error: "+error.message,"#ff7777");
+    return;
+  }
+
+  categories=data||[];
+
+  $("productCategory").innerHTML=
+    '<option value="">No Category</option>'+
+    categories.map(category=>
+      `<option value="${escapeHTML(category.id)}">${escapeHTML(category.name)}</option>`
+    ).join("");
+}
+
+async function loadProducts(){
+
+  const {data,error}=await db
+    .from("products")
+    .select("id,name,sku,base_price,currency,category_id,is_active")
+    .order("created_at",{ascending:false});
+
+  const list=$("productList");
+
+  if(error){
+    list.innerHTML='<tr><td colspan="6" class="empty">Unable to load products.</td></tr>';
+    showMessage("Product error: "+error.message,"#ff7777");
+    return;
+  }
+
+  if(!data.length){
+    list.innerHTML='<tr><td colspan="6" class="empty">No products yet. Add your first product.</td></tr>';
+    return;
+  }
+
+  list.innerHTML=data.map(product=>{
+
+    const category=categories.find(c=>c.id===product.category_id);
+
+    return `
+      <tr>
+        <td>${escapeHTML(product.name)}</td>
+        <td>${escapeHTML(product.sku||"—")}</td>
+        <td>${escapeHTML(product.currency)} ${Number(product.base_price).toFixed(2)}</td>
+        <td>${escapeHTML(category?.name||"—")}</td>
+        <td class="status">${product.is_active?"ACTIVE":"INACTIVE"}</td>
+        <td>
+          <div class="actions">
+            <button class="edit" data-action="edit" data-id="${escapeHTML(product.id)}">Edit</button>
+            <button class="toggle" data-action="toggle" data-id="${escapeHTML(product.id)}" data-active="${product.is_active}">
+              ${product.is_active?"Disable":"Enable"}
+            </button>
+            <button class="delete" data-action="delete" data-id="${escapeHTML(product.id)}">Delete</button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join("");
+}
+
+async function loadOrders(){
+
+  const {data,error}=await db
     .from("orders")
     .select("id,user_id,status,created_at")
     .order("created_at",{ascending:false})
     .limit(10);
 
-  const list = document.getElementById("orderList");
+  const list=$("orderList");
 
-  if(result.error){
-    list.innerHTML = "<tr><td colspan='4'>Unable to load orders. Check database permissions.</td></tr>";
-    message.textContent = result.error.message;
+  if(error){
+    list.innerHTML='<tr><td colspan="4" class="empty">Unable to load orders.</td></tr>';
     return;
   }
 
-  if(!result.data.length){
-    list.innerHTML = "<tr><td colspan='4'>No orders yet.</td></tr>";
+  if(!data.length){
+    list.innerHTML='<tr><td colspan="4" class="empty">No orders yet.</td></tr>';
     return;
   }
 
-  list.innerHTML = result.data.map(order=>`
+  list.innerHTML=data.map(order=>`
     <tr>
-      <td>${escapeHTML(String(order.id))}</td>
-      <td>${escapeHTML(String(order.user_id || "—").slice(0,12))}</td>
-      <td class="status">${escapeHTML(order.status || "Pending")}</td>
-      <td>${order.created_at ? new Date(order.created_at).toLocaleDateString() : "—"}</td>
+      <td>${escapeHTML(order.id)}</td>
+      <td>${escapeHTML(String(order.user_id||"—").slice(0,12))}</td>
+      <td class="status">${escapeHTML(order.status||"Pending")}</td>
+      <td>${order.created_at?new Date(order.created_at).toLocaleDateString():"—"}</td>
     </tr>
   `).join("");
 }
 
-function escapeHTML(value){
-  return value.replace(/[&<>"']/g,char=>({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-  })[char]);
+function openForm(product=null){
+
+  $("productForm").reset();
+  $("productId").value="";
+  $("productCurrency").value="MYR";
+  $("productActive").checked=true;
+
+  if(product){
+
+    $("formTitle").textContent="Edit Product";
+    $("productId").value=product.id;
+    $("productName").value=product.name||"";
+    $("productSku").value=product.sku||"";
+    $("productPrice").value=product.base_price;
+    $("productCurrency").value=product.currency||"MYR";
+    $("productCategory").value=product.category_id||"";
+    $("productDescription").value=product.description||"";
+    $("productImage").value=product.image_url||"";
+    $("providerCode").value=product.provider_code||"";
+    $("productActive").checked=product.is_active!==false;
+
+    $("saveProductBtn").textContent="Update Product";
+
+  }else{
+
+    $("formTitle").textContent="Add New Product";
+    $("saveProductBtn").textContent="Save Product";
+
+  }
+
+  $("productFormCard").style.display="block";
+  $("productFormCard").scrollIntoView({behavior:"smooth"});
 }
 
-document.getElementById("logout").addEventListener("click",async()=>{
+function closeForm(){
+  $("productFormCard").style.display="none";
+  $("productForm").reset();
+  $("productId").value="";
+}
+
+$("addProductBtn").addEventListener("click",()=>openForm());
+
+$("cancelForm").addEventListener("click",closeForm);
+
+$("productForm").addEventListener("submit",async event=>{
+
+  event.preventDefault();
+
+  const id=$("productId").value;
+
+  const name=$("productName").value.trim();
+  const price=Number($("productPrice").value);
+
+  if(!name || !Number.isFinite(price) || price<0){
+    showMessage("Please enter a valid product name and price.","#ff7777");
+    return;
+  }
+
+  const payload={
+    name,
+    sku:$("productSku").value.trim()||null,
+    base_price:price,
+    currency:$("productCurrency").value,
+    category_id:$("productCategory").value||null,
+    description:$("productDescription").value.trim()||null,
+    image_url:$("productImage").value.trim()||null,
+    provider_code:$("providerCode").value.trim()||null,
+    is_active:$("productActive").checked,
+    updated_at:new Date().toISOString()
+  };
+
+  $("saveProductBtn").disabled=true;
+  $("saveProductBtn").textContent="Saving...";
+
+  let result;
+
+  if(id){
+    result=await db.from("products").update(payload).eq("id",id);
+  }else{
+    result=await db.from("products").insert(payload);
+  }
+
+  $("saveProductBtn").disabled=false;
+  $("saveProductBtn").textContent=id?"Update Product":"Save Product";
+
+  if(result.error){
+    showMessage("Save failed: "+result.error.message,"#ff7777");
+    return;
+  }
+
+  showMessage(id?"Product updated successfully!":"Product added successfully!");
+  closeForm();
+
+  await Promise.all([loadProducts(),loadStats()]);
+});
+
+$("productList").addEventListener("click",async event=>{
+
+  const button=event.target.closest("button[data-action]");
+  if(!button)return;
+
+  const id=button.dataset.id;
+  const action=button.dataset.action;
+
+  if(action==="edit"){
+
+    const {data,error}=await db
+      .from("products")
+      .select("*")
+      .eq("id",id)
+      .single();
+
+    if(error){
+      showMessage(error.message,"#ff7777");
+      return;
+    }
+
+    openForm(data);
+  }
+
+  if(action==="toggle"){
+
+    const currentlyActive=button.dataset.active==="true";
+
+    const {error}=await db
+      .from("products")
+      .update({
+        is_active:!currentlyActive,
+        updated_at:new Date().toISOString()
+      })
+      .eq("id",id);
+
+    if(error){
+      showMessage("Status update failed: "+error.message,"#ff7777");
+      return;
+    }
+
+    showMessage("Product status updated.");
+    await Promise.all([loadProducts(),loadStats()]);
+  }
+
+  if(action==="delete"){
+
+    if(!confirm("Delete this product permanently?"))return;
+
+    const {error}=await db
+      .from("products")
+      .delete()
+      .eq("id",id);
+
+    if(error){
+      showMessage("Delete failed: "+error.message,"#ff7777");
+      return;
+    }
+
+    showMessage("Product deleted.");
+    await Promise.all([loadProducts(),loadStats()]);
+  }
+});
+
+$("logout").addEventListener("click",async()=>{
   await db.auth.signOut();
   location.href="login.html";
 });
 
 init();
 </script>
+
 </body>
 </html>
