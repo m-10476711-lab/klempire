@@ -7,6 +7,7 @@
 <title>KL EMPIRE | Admin</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Arial,sans-serif;background:#071a35;color:white;min-height:100vh}
@@ -46,6 +47,7 @@ th{color:#70afff}
 .status{color:#70afff;font-weight:bold}
 .empty{text-align:center;color:#9db4d3;padding:20px}
 #message{margin-top:18px;color:#70afff;word-break:break-word}
+.note{font-size:12px;color:#9db4d3;margin-top:10px;line-height:1.6}
 @media(max-width:600px){
  main{padding:22px 4%}
  header{padding:16px 4%}
@@ -84,14 +86,11 @@ th{color:#70afff}
       <h3 id="categoryFormTitle">Add Category</h3>
       <form id="categoryForm">
         <input type="hidden" id="categoryId">
-
         <div class="form-grid">
           <div class="field">
             <label>Category Name *</label>
-            <input id="categoryName" required maxlength="100"
-              placeholder="Example: Mobile Legends">
+            <input id="categoryName" required maxlength="100" placeholder="Example: Mobile Legends">
           </div>
-
           <div class="field">
             <label>Category Type *</label>
             <select id="categoryType" required>
@@ -100,13 +99,10 @@ th{color:#70afff}
               <option value="other">Other</option>
             </select>
           </div>
-
           <div class="field full">
             <label>Description</label>
-            <textarea id="categoryDescription"
-              placeholder="Category description..."></textarea>
+            <textarea id="categoryDescription"></textarea>
           </div>
-
           <div class="field full">
             <label class="check">
               <input type="checkbox" id="categoryActive" checked>
@@ -114,9 +110,8 @@ th{color:#70afff}
             </label>
           </div>
         </div>
-
         <div class="form-actions">
-          <button type="submit" id="saveCategoryBtn">Save Category</button>
+          <button type="submit">Save Category</button>
           <button type="button" class="cancel" id="cancelCategory">Cancel</button>
         </div>
       </form>
@@ -125,9 +120,7 @@ th{color:#70afff}
     <div class="card table-wrap">
       <table>
         <thead>
-          <tr>
-            <th>Name</th><th>Type</th><th>Status</th><th>Actions</th>
-          </tr>
+          <tr><th>Name</th><th>Type</th><th>Status</th><th>Actions</th></tr>
         </thead>
         <tbody id="categoryList">
           <tr><td colspan="4" class="empty">Loading...</td></tr>
@@ -145,57 +138,45 @@ th{color:#70afff}
 
     <div class="form-card" id="productFormCard">
       <h3 id="productFormTitle">Add Product</h3>
-
       <form id="productForm">
         <input type="hidden" id="productId">
-
         <div class="form-grid">
           <div class="field">
             <label>Product Name *</label>
-            <input id="productName" required maxlength="150"
-              placeholder="Product name">
+            <input id="productName" required maxlength="150">
           </div>
-
           <div class="field">
             <label>SKU</label>
-            <input id="productSku" maxlength="100" placeholder="SKU">
+            <input id="productSku" maxlength="100">
           </div>
-
           <div class="field">
             <label>Base Price (MYR) *</label>
-            <input id="productPrice" type="number" min="0"
-              step="0.01" required placeholder="10.00">
+            <input id="productPrice" type="number" min="0" step="0.01" required>
           </div>
-
           <div class="field">
             <label>Currency</label>
             <select id="productCurrency">
               <option value="MYR">MYR</option>
             </select>
           </div>
-
           <div class="field full">
             <label>Category</label>
             <select id="productCategory">
               <option value="">No Category</option>
             </select>
           </div>
-
           <div class="field full">
             <label>Description</label>
             <textarea id="productDescription"></textarea>
           </div>
-
           <div class="field full">
             <label>Image URL</label>
             <input id="productImage" type="url" placeholder="https://...">
           </div>
-
           <div class="field full">
             <label>Provider Code</label>
-            <input id="providerCode" placeholder="Optional">
+            <input id="providerCode">
           </div>
-
           <div class="field full">
             <label class="check">
               <input type="checkbox" id="productActive" checked>
@@ -203,9 +184,8 @@ th{color:#70afff}
             </label>
           </div>
         </div>
-
         <div class="form-actions">
-          <button type="submit" id="saveProductBtn">Save Product</button>
+          <button type="submit">Save Product</button>
           <button type="button" class="cancel" id="cancelProduct">Cancel</button>
         </div>
       </form>
@@ -223,6 +203,123 @@ th{color:#70afff}
           <tr><td colspan="6" class="empty">Loading...</td></tr>
         </tbody>
       </table>
+    </div>
+  </section>
+
+  <!-- MEMBERSHIP PLANS -->
+  <section class="section">
+    <div class="section-title">
+      <h2>Membership Plans</h2>
+      <button id="addPlanBtn">+ Add Membership Plan</button>
+    </div>
+
+    <div class="form-card" id="planFormCard">
+      <h3 id="planFormTitle">Add Membership Plan</h3>
+      <form id="planForm">
+        <input type="hidden" id="planId">
+
+        <div class="form-grid">
+          <div class="field">
+            <label>Membership Tier *</label>
+            <select id="planTier" required>
+              <option value="bronze">Bronze</option>
+              <option value="silver">Silver</option>
+              <option value="gold">Gold</option>
+              <option value="platinum">Platinum</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Duration *</label>
+            <select id="planDuration" required>
+              <option value="monthly">Monthly — 30 Days</option>
+              <option value="annual">Annual — 365 Days</option>
+              <option value="permanent">Permanent — Lifetime</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Price (MYR) *</label>
+            <input id="planPrice" type="number" min="0" step="0.01" required placeholder="0.00">
+          </div>
+
+          <div class="field full">
+            <label class="check">
+              <input type="checkbox" id="planActive" checked>
+              Plan Active
+            </label>
+          </div>
+        </div>
+
+        <p class="note">Monthly = 30 days. Annual = 365 days. Permanent = no expiry (NULL duration_days).</p>
+
+        <div class="form-actions">
+          <button type="submit" id="savePlanBtn">Save Plan</button>
+          <button type="button" class="cancel" id="cancelPlan">Cancel</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="card table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Tier</th><th>Duration</th><th>Days</th>
+            <th>Price</th><th>Status</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="planList">
+          <tr><td colspan="6" class="empty">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ROLE PRICING -->
+  <section class="section">
+    <div class="section-title">
+      <h2>Role Pricing</h2>
+      <button id="refreshPricingBtn" class="toggle">Refresh</button>
+    </div>
+
+    <div class="card">
+      <p class="note">
+        Set the percentage markup for each membership tier.
+        Example: 10% markup on a RM10 base price gives RM11.
+        A negative percentage represents a discount.
+      </p>
+
+      <div class="form-grid">
+        <div class="field">
+          <label>Membership Tier</label>
+          <select id="pricingTier">
+            <option value="bronze">Bronze</option>
+            <option value="silver">Silver</option>
+            <option value="gold">Gold</option>
+            <option value="platinum">Platinum</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Markup Percentage (%)</label>
+          <input id="pricingMarkup" type="number" step="0.01" min="-100" max="1000" value="0">
+        </div>
+
+        <div class="field full">
+          <button id="savePricingBtn" type="button">Save Role Pricing</button>
+        </div>
+      </div>
+
+      <div style="margin-top:25px" class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Membership Tier</th><th>Markup</th><th>Actions</th></tr>
+          </thead>
+          <tbody id="pricingList">
+            <tr><td colspan="3" class="empty">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </section>
 
@@ -245,181 +342,245 @@ th{color:#70afff}
 </main>
 
 <script>
-const db=supabase.createClient(
+const db = supabase.createClient(
   window.KL_CONFIG.SUPABASE_URL,
   window.KL_CONFIG.SUPABASE_KEY
 );
 
-const $=id=>document.getElementById(id);
-let categories=[];
+const $ = id => document.getElementById(id);
 
-function esc(value){
-  return String(value??"").replace(/[&<>"']/g,c=>({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+let categories = [];
+let plans = [];
+let pricingRows = [];
+
+const TIERS = ["bronze","silver","gold","platinum"];
+
+function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
   })[c]);
 }
 
-function msg(text,error=false){
-  $("message").style.color=error?"#ff7777":"#70afff";
-  $("message").textContent=text;
+function msg(text, error=false) {
+  $("message").style.color = error ? "#ff7777" : "#70afff";
+  $("message").textContent = text;
 }
 
-async function init(){
-  const {data:{session},error}=await db.auth.getSession();
+function tierName(tier) {
+  return String(tier || "").charAt(0).toUpperCase() +
+    String(tier || "").slice(1);
+}
 
-  if(error||!session){
-    location.href="login.html";
+function money(value) {
+  return "MYR " + Number(value || 0).toFixed(2);
+}
+
+function durationLabel(type) {
+  const labels = {
+    monthly: "Monthly",
+    annual: "Annual",
+    permanent: "Permanent"
+  };
+  return labels[type] || type;
+}
+
+/* AUTHENTICATION */
+
+async function init() {
+  const {data:{session}, error} = await db.auth.getSession();
+
+  if (error || !session) {
+    location.href = "login.html";
     return;
   }
 
-  const {data:profile,error:profileError}=await db
+  const {data:profile, error:profileError} = await db
     .from("profiles")
     .select("account_role")
-    .eq("id",session.user.id)
+    .eq("id", session.user.id)
     .single();
 
-  if(profileError||profile?.account_role!=="admin"){
-    msg("Admin access required.",true);
+  if (profileError || profile?.account_role !== "admin") {
+    msg("Admin access required.", true);
     await db.auth.signOut();
-    setTimeout(()=>location.href="login.html",1200);
+    setTimeout(() => location.href = "login.html", 1200);
     return;
   }
 
   await loadCategories();
-  await Promise.all([loadStats(),loadProducts(),loadOrders()]);
+
+  await Promise.all([
+    loadStats(),
+    loadProducts(),
+    loadOrders(),
+    loadPlans(),
+    loadPricing()
+  ]);
 }
 
-async function loadStats(){
-  const results=await Promise.all([
-    db.from("profiles").select("*",{count:"exact",head:true}),
-    db.from("products").select("*",{count:"exact",head:true}),
-    db.from("orders").select("*",{count:"exact",head:true})
+/* DASHBOARD STATS */
+
+async function loadStats() {
+  const results = await Promise.all([
+    db.from("profiles").select("*", {count:"exact", head:true}),
+    db.from("products").select("*", {count:"exact", head:true}),
+    db.from("orders").select("*", {count:"exact", head:true})
   ]);
 
-  $("users").textContent=results[0].error?"—":results[0].count;
-  $("products").textContent=results[1].error?"—":results[1].count;
-  $("orders").textContent=results[2].error?"—":results[2].count;
-  $("categoryCount").textContent=categories.length;
+  $("users").textContent = results[0].error ? "—" : results[0].count;
+  $("products").textContent = results[1].error ? "—" : results[1].count;
+  $("orders").textContent = results[2].error ? "—" : results[2].count;
+  $("categoryCount").textContent = categories.length;
 }
 
-async function loadCategories(){
-  const {data,error}=await db.from("categories")
-    .select("*").order("name");
+/* CATEGORY MANAGEMENT */
 
-  if(error){
-    msg("Category error: "+error.message,true);
+async function loadCategories() {
+  const {data, error} = await db
+    .from("categories")
+    .select("*")
+    .order("name");
+
+  if (error) {
+    msg("Category error: " + error.message, true);
     return;
   }
 
-  categories=data||[];
+  categories = data || [];
 
-  $("categoryList").innerHTML=categories.length
-    ?categories.map(c=>`
+  $("categoryList").innerHTML = categories.length
+    ? categories.map(c => `
       <tr>
         <td>${esc(c.name)}</td>
         <td>${esc(c.category_type)}</td>
-        <td class="status">${c.is_active?"ACTIVE":"INACTIVE"}</td>
-        <td><div class="actions">
-          <button data-action="edit-category" data-id="${esc(c.id)}">Edit</button>
-          <button class="toggle" data-action="toggle-category" data-id="${esc(c.id)}">${c.is_active?"Disable":"Enable"}</button>
-          <button class="delete" data-action="delete-category" data-id="${esc(c.id)}">Delete</button>
-        </div></td>
-      </tr>`).join("")
-    :'<tr><td colspan="4" class="empty">No categories yet.</td></tr>';
+        <td class="status">${c.is_active ? "ACTIVE" : "INACTIVE"}</td>
+        <td>
+          <div class="actions">
+            <button data-action="edit-category" data-id="${esc(c.id)}">Edit</button>
+            <button class="toggle" data-action="toggle-category" data-id="${esc(c.id)}">${c.is_active ? "Disable" : "Enable"}</button>
+            <button class="delete" data-action="delete-category" data-id="${esc(c.id)}">Delete</button>
+          </div>
+        </td>
+      </tr>
+    `).join("")
+    : '<tr><td colspan="4" class="empty">No categories yet.</td></tr>';
 
-  const active=categories.filter(c=>c.is_active);
+  const active = categories.filter(c => c.is_active);
 
-  $("productCategory").innerHTML=
-    '<option value="">No Category</option>'+
-    active.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join("");
+  $("productCategory").innerHTML =
+    '<option value="">No Category</option>' +
+    active.map(c =>
+      `<option value="${esc(c.id)}">${esc(c.name)}</option>`
+    ).join("");
 
-  $("categoryCount").textContent=categories.length;
+  $("categoryCount").textContent = categories.length;
 }
 
-function openCategory(c=null){
+function openCategory(c=null) {
   $("categoryForm").reset();
-  $("categoryId").value="";
-  $("categoryActive").checked=true;
-  $("categoryFormTitle").textContent=c?"Edit Category":"Add Category";
+  $("categoryId").value = "";
+  $("categoryActive").checked = true;
+  $("categoryFormTitle").textContent = c ? "Edit Category" : "Add Category";
 
-  if(c){
-    $("categoryId").value=c.id;
-    $("categoryName").value=c.name;
-    $("categoryType").value=c.category_type;
-    $("categoryDescription").value=c.description||"";
-    $("categoryActive").checked=c.is_active!==false;
+  if (c) {
+    $("categoryId").value = c.id;
+    $("categoryName").value = c.name;
+    $("categoryType").value = c.category_type;
+    $("categoryDescription").value = c.description || "";
+    $("categoryActive").checked = c.is_active !== false;
   }
 
-  $("categoryFormCard").style.display="block";
+  $("categoryFormCard").style.display = "block";
   $("categoryFormCard").scrollIntoView({behavior:"smooth"});
 }
 
-$("addCategoryBtn").onclick=()=>openCategory();
-$("cancelCategory").onclick=()=>{$("categoryFormCard").style.display="none";};
+$("addCategoryBtn").onclick = () => openCategory();
+$("cancelCategory").onclick = () => {
+  $("categoryFormCard").style.display = "none";
+};
 
-$("categoryForm").onsubmit=async e=>{
+$("categoryForm").onsubmit = async e => {
   e.preventDefault();
 
-  const id=$("categoryId").value;
-  const payload={
-    name:$("categoryName").value.trim(),
-    category_type:$("categoryType").value,
-    description:$("categoryDescription").value.trim()||null,
-    is_active:$("categoryActive").checked
+  const id = $("categoryId").value;
+
+  const payload = {
+    name: $("categoryName").value.trim(),
+    category_type: $("categoryType").value,
+    description: $("categoryDescription").value.trim() || null,
+    is_active: $("categoryActive").checked
   };
 
-  const result=id
-    ?await db.from("categories").update(payload).eq("id",id)
-    :await db.from("categories").insert(payload);
+  const result = id
+    ? await db.from("categories").update(payload).eq("id", id)
+    : await db.from("categories").insert(payload);
 
-  if(result.error){
-    msg("Category save failed: "+result.error.message,true);
+  if (result.error) {
+    msg("Category save failed: " + result.error.message, true);
     return;
   }
 
-  $("categoryFormCard").style.display="none";
-  msg(id?"Category updated.":"Category created.");
+  $("categoryFormCard").style.display = "none";
+  msg(id ? "Category updated." : "Category created.");
+
   await loadCategories();
   await loadProducts();
   await loadStats();
 };
 
-$("categoryList").onclick=async e=>{
-  const b=e.target.closest("button[data-action]");
-  if(!b)return;
+$("categoryList").onclick = async e => {
+  const b = e.target.closest("button[data-action]");
+  if (!b) return;
 
-  const id=b.dataset.id;
-  const c=categories.find(x=>x.id===id);
-  if(!c)return;
+  const id = b.dataset.id;
+  const c = categories.find(x => x.id === id);
+  if (!c) return;
 
-  if(b.dataset.action==="edit-category"){
+  if (b.dataset.action === "edit-category") {
     openCategory(c);
   }
 
-  if(b.dataset.action==="toggle-category"){
-    const {error}=await db.from("categories")
-      .update({is_active:!c.is_active}).eq("id",id);
+  if (b.dataset.action === "toggle-category") {
+    const {error} = await db.from("categories")
+      .update({is_active:!c.is_active})
+      .eq("id", id);
 
-    if(error){msg(error.message,true);return;}
+    if (error) {
+      msg(error.message, true);
+      return;
+    }
+
     msg("Category status updated.");
     await loadCategories();
   }
 
-  if(b.dataset.action==="delete-category"){
-    const {count,error:checkError}=await db.from("products")
-      .select("*",{count:"exact",head:true}).eq("category_id",id);
+  if (b.dataset.action === "delete-category") {
+    const {count, error:checkError} = await db.from("products")
+      .select("*", {count:"exact", head:true})
+      .eq("category_id", id);
 
-    if(checkError){msg(checkError.message,true);return;}
-
-    if(count>0){
-      msg("Cannot delete: this category still has products. Move or remove those products first.",true);
+    if (checkError) {
+      msg(checkError.message, true);
       return;
     }
 
-    if(!confirm("Delete this category permanently?"))return;
+    if (count > 0) {
+      msg("Cannot delete: this category still has products. Move or remove those products first.", true);
+      return;
+    }
 
-    const {error}=await db.from("categories").delete().eq("id",id);
-    if(error){msg("Delete failed: "+error.message,true);return;}
+    if (!confirm("Delete this category permanently?")) return;
+
+    const {error} = await db.from("categories").delete().eq("id", id);
+
+    if (error) {
+      msg("Delete failed: " + error.message, true);
+      return;
+    }
 
     msg("Category deleted.");
     await loadCategories();
@@ -427,133 +588,165 @@ $("categoryList").onclick=async e=>{
   }
 };
 
-async function loadProducts(){
-  const {data,error}=await db.from("products")
-    .select("*").order("created_at",{ascending:false});
+/* PRODUCT MANAGEMENT */
 
-  if(error){
-    $("productList").innerHTML='<tr><td colspan="6" class="empty">Unable to load products.</td></tr>';
-    msg("Product error: "+error.message,true);
+async function loadProducts() {
+  const {data, error} = await db.from("products")
+    .select("*")
+    .order("created_at", {ascending:false});
+
+  if (error) {
+    $("productList").innerHTML =
+      '<tr><td colspan="6" class="empty">Unable to load products.</td></tr>';
+    msg("Product error: " + error.message, true);
     return;
   }
 
-  $("productList").innerHTML=data.length?data.map(p=>{
-    const c=categories.find(x=>x.id===p.category_id);
-    return `<tr>
-      <td>${esc(p.name)}</td>
-      <td>${esc(p.sku||"—")}</td>
-      <td>${esc(p.currency)} ${Number(p.base_price).toFixed(2)}</td>
-      <td>${esc(c?.name||"—")}</td>
-      <td class="status">${p.is_active?"ACTIVE":"INACTIVE"}</td>
-      <td><div class="actions">
-        <button data-action="edit-product" data-id="${esc(p.id)}">Edit</button>
-        <button class="toggle" data-action="toggle-product" data-id="${esc(p.id)}">${p.is_active?"Disable":"Enable"}</button>
-        <button class="delete" data-action="delete-product" data-id="${esc(p.id)}">Delete</button>
-      </div></td>
-    </tr>`;
-  }).join(""):'<tr><td colspan="6" class="empty">No products yet.</td></tr>';
+  $("productList").innerHTML = data.length ? data.map(p => {
+    const c = categories.find(x => x.id === p.category_id);
+
+    return `
+      <tr>
+        <td>${esc(p.name)}</td>
+        <td>${esc(p.sku || "—")}</td>
+        <td>${esc(p.currency)} ${Number(p.base_price).toFixed(2)}</td>
+        <td>${esc(c?.name || "—")}</td>
+        <td class="status">${p.is_active ? "ACTIVE" : "INACTIVE"}</td>
+        <td>
+          <div class="actions">
+            <button data-action="edit-product" data-id="${esc(p.id)}">Edit</button>
+            <button class="toggle" data-action="toggle-product" data-id="${esc(p.id)}">${p.is_active ? "Disable" : "Enable"}</button>
+            <button class="delete" data-action="delete-product" data-id="${esc(p.id)}">Delete</button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join("") : '<tr><td colspan="6" class="empty">No products yet.</td></tr>';
 }
 
-function openProduct(p=null){
+function openProduct(p=null) {
   $("productForm").reset();
-  $("productId").value="";
-  $("productCurrency").value="MYR";
-  $("productActive").checked=true;
-  $("productFormTitle").textContent=p?"Edit Product":"Add Product";
+  $("productId").value = "";
+  $("productCurrency").value = "MYR";
+  $("productActive").checked = true;
+  $("productFormTitle").textContent = p ? "Edit Product" : "Add Product";
 
-  if(p){
-    $("productId").value=p.id;
-    $("productName").value=p.name||"";
-    $("productSku").value=p.sku||"";
-    $("productPrice").value=p.base_price;
-    $("productCurrency").value=p.currency||"MYR";
-    $("productCategory").value=p.category_id||"";
-    $("productDescription").value=p.description||"";
-    $("productImage").value=p.image_url||"";
-    $("providerCode").value=p.provider_code||"";
-    $("productActive").checked=p.is_active!==false;
+  if (p) {
+    $("productId").value = p.id;
+    $("productName").value = p.name || "";
+    $("productSku").value = p.sku || "";
+    $("productPrice").value = p.base_price;
+    $("productCurrency").value = p.currency || "MYR";
+    $("productCategory").value = p.category_id || "";
+    $("productDescription").value = p.description || "";
+    $("productImage").value = p.image_url || "";
+    $("providerCode").value = p.provider_code || "";
+    $("productActive").checked = p.is_active !== false;
   }
 
-  $("productFormCard").style.display="block";
+  $("productFormCard").style.display = "block";
   $("productFormCard").scrollIntoView({behavior:"smooth"});
 }
 
-$("addProductBtn").onclick=()=>openProduct();
-$("cancelProduct").onclick=()=>{$("productFormCard").style.display="none";};
+$("addProductBtn").onclick = () => openProduct();
+$("cancelProduct").onclick = () => {
+  $("productFormCard").style.display = "none";
+};
 
-$("productForm").onsubmit=async e=>{
+$("productForm").onsubmit = async e => {
   e.preventDefault();
 
-  const id=$("productId").value;
-  const price=Number($("productPrice").value);
+  const id = $("productId").value;
+  const price = Number($("productPrice").value);
 
-  if(!Number.isFinite(price)||price<0){
-    msg("Enter a valid price.",true);
+  if (!Number.isFinite(price) || price < 0) {
+    msg("Enter a valid price.", true);
     return;
   }
 
-  const payload={
-    name:$("productName").value.trim(),
-    sku:$("productSku").value.trim()||null,
-    base_price:price,
-    currency:$("productCurrency").value,
-    category_id:$("productCategory").value||null,
-    description:$("productDescription").value.trim()||null,
-    image_url:$("productImage").value.trim()||null,
-    provider_code:$("providerCode").value.trim()||null,
-    is_active:$("productActive").checked,
-    updated_at:new Date().toISOString()
+  const payload = {
+    name: $("productName").value.trim(),
+    sku: $("productSku").value.trim() || null,
+    base_price: price,
+    currency: $("productCurrency").value,
+    category_id: $("productCategory").value || null,
+    description: $("productDescription").value.trim() || null,
+    image_url: $("productImage").value.trim() || null,
+    provider_code: $("providerCode").value.trim() || null,
+    is_active: $("productActive").checked,
+    updated_at: new Date().toISOString()
   };
 
-  const result=id
-    ?await db.from("products").update(payload).eq("id",id)
-    :await db.from("products").insert(payload);
+  const result = id
+    ? await db.from("products").update(payload).eq("id", id)
+    : await db.from("products").insert(payload);
 
-  if(result.error){
-    msg("Product save failed: "+result.error.message,true);
+  if (result.error) {
+    msg("Product save failed: " + result.error.message, true);
     return;
   }
 
-  $("productFormCard").style.display="none";
-  msg(id?"Product updated.":"Product created.");
+  $("productFormCard").style.display = "none";
+  msg(id ? "Product updated." : "Product created.");
+
   await loadProducts();
   await loadStats();
 };
 
-$("productList").onclick=async e=>{
-  const b=e.target.closest("button[data-action]");
-  if(!b)return;
+$("productList").onclick = async e => {
+  const b = e.target.closest("button[data-action]");
+  if (!b) return;
 
-  const id=b.dataset.id;
-  const action=b.dataset.action;
+  const id = b.dataset.id;
+  const action = b.dataset.action;
 
-  if(action==="edit-product"){
-    const {data,error}=await db.from("products").select("*").eq("id",id).single();
-    if(error){msg(error.message,true);return;}
+  if (action === "edit-product") {
+    const {data, error} = await db.from("products")
+      .select("*").eq("id", id).single();
+
+    if (error) {
+      msg(error.message, true);
+      return;
+    }
+
     openProduct(data);
   }
 
-  if(action==="toggle-product"){
-    const {data,error:fetchError}=await db.from("products")
-      .select("is_active").eq("id",id).single();
+  if (action === "toggle-product") {
+    const {data, error:fetchError} = await db.from("products")
+      .select("is_active").eq("id", id).single();
 
-    if(fetchError){msg(fetchError.message,true);return;}
+    if (fetchError) {
+      msg(fetchError.message, true);
+      return;
+    }
 
-    const {error}=await db.from("products")
-      .update({is_active:!data.is_active,updated_at:new Date().toISOString()})
-      .eq("id",id);
+    const {error} = await db.from("products")
+      .update({
+        is_active:!data.is_active,
+        updated_at:new Date().toISOString()
+      })
+      .eq("id", id);
 
-    if(error){msg(error.message,true);return;}
+    if (error) {
+      msg(error.message, true);
+      return;
+    }
+
     msg("Product status updated.");
     await loadProducts();
     await loadStats();
   }
 
-  if(action==="delete-product"){
-    if(!confirm("Delete this product permanently?"))return;
+  if (action === "delete-product") {
+    if (!confirm("Delete this product permanently?")) return;
 
-    const {error}=await db.from("products").delete().eq("id",id);
-    if(error){msg("Delete failed: "+error.message,true);return;}
+    const {error} = await db.from("products").delete().eq("id", id);
+
+    if (error) {
+      msg("Delete failed: " + error.message, true);
+      return;
+    }
 
     msg("Product deleted.");
     await loadProducts();
@@ -561,29 +754,267 @@ $("productList").onclick=async e=>{
   }
 };
 
-async function loadOrders(){
-  const {data,error}=await db.from("orders")
-    .select("id,user_id,status,created_at")
-    .order("created_at",{ascending:false}).limit(10);
+/* MEMBERSHIP PLANS */
 
-  if(error){
-    $("orderList").innerHTML='<tr><td colspan="4" class="empty">Unable to load orders.</td></tr>';
+async function loadPlans() {
+  const {data, error} = await db.from("membership_plans")
+    .select("*")
+    .order("tier")
+    .order("duration_type");
+
+  if (error) {
+    $("planList").innerHTML =
+      `<tr><td colspan="6" class="empty">Unable to load plans: ${esc(error.message)}</td></tr>`;
+    msg("Membership plans error: " + error.message, true);
     return;
   }
 
-  $("orderList").innerHTML=data.length?data.map(o=>`
+  plans = data || [];
+
+  $("planList").innerHTML = plans.length ? plans.map(p => `
     <tr>
-      <td>${esc(o.id)}</td>
-      <td>${esc(String(o.user_id||"—").slice(0,12))}</td>
-      <td class="status">${esc(o.status||"Pending")}</td>
-      <td>${o.created_at?new Date(o.created_at).toLocaleDateString():"—"}</td>
-    </tr>`).join("")
-    :'<tr><td colspan="4" class="empty">No orders yet.</td></tr>';
+      <td>${esc(tierName(p.tier))}</td>
+      <td>${esc(durationLabel(p.duration_type))}</td>
+      <td>${p.duration_days == null ? "Lifetime" : esc(p.duration_days)}</td>
+      <td>${money(p.price)}</td>
+      <td class="status">${p.is_active ? "ACTIVE" : "INACTIVE"}</td>
+      <td>
+        <div class="actions">
+          <button data-action="edit-plan" data-id="${esc(p.id)}">Edit</button>
+          <button class="toggle" data-action="toggle-plan" data-id="${esc(p.id)}">${p.is_active ? "Disable" : "Enable"}</button>
+          <button class="delete" data-action="delete-plan" data-id="${esc(p.id)}">Delete</button>
+        </div>
+      </td>
+    </tr>
+  `).join("") : '<tr><td colspan="6" class="empty">No membership plans yet.</td></tr>';
 }
 
-$("logout").onclick=async()=>{
+function openPlan(p=null) {
+  $("planForm").reset();
+  $("planId").value = "";
+  $("planTier").value = "bronze";
+  $("planDuration").value = "monthly";
+  $("planActive").checked = true;
+  $("planFormTitle").textContent = p ? "Edit Membership Plan" : "Add Membership Plan";
+
+  if (p) {
+    $("planId").value = p.id;
+    $("planTier").value = p.tier;
+    $("planDuration").value = p.duration_type;
+    $("planPrice").value = p.price;
+    $("planActive").checked = p.is_active;
+  }
+
+  $("planFormCard").style.display = "block";
+  $("planFormCard").scrollIntoView({behavior:"smooth"});
+}
+
+$("addPlanBtn").onclick = () => openPlan();
+$("cancelPlan").onclick = () => {
+  $("planFormCard").style.display = "none";
+};
+
+$("planForm").onsubmit = async e => {
+  e.preventDefault();
+
+  const id = $("planId").value;
+  const duration = $("planDuration").value;
+  const price = Number($("planPrice").value);
+
+  if (!Number.isFinite(price) || price < 0) {
+    msg("Enter a valid membership price.", true);
+    return;
+  }
+
+  const days = {
+    monthly:30,
+    annual:365,
+    permanent:null
+  };
+
+  const payload = {
+    tier:$("planTier").value,
+    duration_type:duration,
+    duration_days:days[duration],
+    price:price,
+    is_active:$("planActive").checked
+  };
+
+  const result = id
+    ? await db.from("membership_plans").update(payload).eq("id", id)
+    : await db.from("membership_plans").insert(payload);
+
+  if (result.error) {
+    msg("Membership save failed: " + result.error.message, true);
+    return;
+  }
+
+  $("planFormCard").style.display = "none";
+  msg(id ? "Membership plan updated." : "Membership plan created.");
+
+  await loadPlans();
+};
+
+$("planList").onclick = async e => {
+  const b = e.target.closest("button[data-action]");
+  if (!b) return;
+
+  const id = b.dataset.id;
+  const plan = plans.find(p => p.id === id);
+  if (!plan) return;
+
+  const action = b.dataset.action;
+
+  if (action === "edit-plan") {
+    openPlan(plan);
+  }
+
+  if (action === "toggle-plan") {
+    const {error} = await db.from("membership_plans")
+      .update({is_active:!plan.is_active})
+      .eq("id", id);
+
+    if (error) {
+      msg("Plan status update failed: " + error.message, true);
+      return;
+    }
+
+    msg("Membership plan status updated.");
+    await loadPlans();
+  }
+
+  if (action === "delete-plan") {
+    if (!confirm("Delete this membership plan permanently?")) return;
+
+    const {error} = await db.from("membership_plans")
+      .delete().eq("id", id);
+
+    if (error) {
+      msg("Plan delete failed: " + error.message, true);
+      return;
+    }
+
+    msg("Membership plan deleted.");
+    await loadPlans();
+  }
+};
+
+/* ROLE PRICING */
+
+async function loadPricing() {
+  const {data, error} = await db.from("role_pricing")
+    .select("*")
+    .order("tier");
+
+  if (error) {
+    $("pricingList").innerHTML =
+      `<tr><td colspan="3" class="empty">Unable to load pricing: ${esc(error.message)}</td></tr>`;
+    msg("Role pricing error: " + error.message, true);
+    return;
+  }
+
+  pricingRows = data || [];
+
+  $("pricingList").innerHTML = pricingRows.length
+    ? pricingRows.map(p => `
+      <tr>
+        <td>${esc(tierName(p.tier))}</td>
+        <td>${Number(p.markup_percent).toFixed(2)}%</td>
+        <td>
+          <div class="actions">
+            <button data-action="edit-pricing" data-id="${esc(p.id)}">Edit</button>
+          </div>
+        </td>
+      </tr>
+    `).join("")
+    : '<tr><td colspan="3" class="empty">No role pricing records yet. Save a tier to create one.</td></tr>';
+}
+
+$("savePricingBtn").onclick = async () => {
+  const tier = $("pricingTier").value;
+  const markup = Number($("pricingMarkup").value);
+
+  if (!Number.isFinite(markup) || markup < -100 || markup > 1000) {
+    msg("Markup must be between -100% and 1000%.", true);
+    return;
+  }
+
+  const existing = pricingRows.find(p => p.tier === tier);
+
+  let result;
+
+  if (existing) {
+    result = await db.from("role_pricing")
+      .update({
+        markup_percent:markup,
+        updated_at:new Date().toISOString()
+      })
+      .eq("id", existing.id);
+  } else {
+    result = await db.from("role_pricing")
+      .insert({
+        tier:tier,
+        markup_percent:markup,
+        updated_at:new Date().toISOString()
+      });
+  }
+
+  if (result.error) {
+    msg("Role pricing save failed: " + result.error.message, true);
+    return;
+  }
+
+  msg(tierName(tier) + " pricing saved.");
+  await loadPricing();
+};
+
+$("pricingList").onclick = e => {
+  const b = e.target.closest("button[data-action='edit-pricing']");
+  if (!b) return;
+
+  const row = pricingRows.find(p => p.id === b.dataset.id);
+  if (!row) return;
+
+  $("pricingTier").value = row.tier;
+  $("pricingMarkup").value = row.markup_percent;
+
+  $("pricingTier").scrollIntoView({behavior:"smooth", block:"center"});
+};
+
+$("refreshPricingBtn").onclick = async () => {
+  await loadPricing();
+  msg("Role pricing refreshed.");
+};
+
+/* ORDERS */
+
+async function loadOrders() {
+  const {data, error} = await db.from("orders")
+    .select("id,user_id,status,created_at")
+    .order("created_at", {ascending:false})
+    .limit(10);
+
+  if (error) {
+    $("orderList").innerHTML =
+      '<tr><td colspan="4" class="empty">Unable to load orders.</td></tr>';
+    return;
+  }
+
+  $("orderList").innerHTML = data.length ? data.map(o => `
+    <tr>
+      <td>${esc(o.id)}</td>
+      <td>${esc(String(o.user_id || "—").slice(0,12))}</td>
+      <td class="status">${esc(o.status || "Pending")}</td>
+      <td>${o.created_at ? new Date(o.created_at).toLocaleDateString() : "—"}</td>
+    </tr>
+  `).join("") : '<tr><td colspan="4" class="empty">No orders yet.</td></tr>';
+}
+
+/* LOGOUT */
+
+$("logout").onclick = async () => {
   await db.auth.signOut();
-  location.href="login.html";
+  location.href = "login.html";
 };
 
 init();
