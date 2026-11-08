@@ -1,0 +1,532 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#071A35">
+  <title>KL EMPIRE — Digital Services Ecosystem</title>
+  <meta name="description" content="Your all-in-one digital services ecosystem. Game top-ups, digital services and reseller opportunities.">
+
+  <style>
+    :root {
+      --blue: #1769FF;
+      --navy: #071A35;
+      --panel: #102B50;
+      --light: #70AFFF;
+      --white: #FFFFFF;
+      --muted: #9CB2D0;
+      --border: rgba(112,175,255,.17);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Inter, Arial, sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; cursor: pointer; }
+
+    .ambient {
+      position: fixed;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: #1769ff;
+      filter: blur(150px);
+      opacity: .15;
+      pointer-events: none;
+      z-index: -1;
+      top: -180px;
+      right: -150px;
+    }
+
+    .container {
+      width: min(1160px, 90%);
+      margin: auto;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(7,26,53,.88);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    nav {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      font-size: 23px;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
+
+    .brand span { color: var(--light); }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 27px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .nav-links a:hover { color: white; }
+
+    .nav-actions { display: flex; gap: 10px; }
+
+    .btn {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 11px 17px;
+      color: white;
+      background: rgba(255,255,255,.04);
+      font-weight: 700;
+      font-size: 13px;
+      transition: .2s;
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+
+    .btn-primary {
+      background: var(--blue);
+      border-color: var(--blue);
+      box-shadow: 0 5px 25px rgba(23,105,255,.25);
+    }
+
+    .menu-btn { display: none; }
+
+    .hero {
+      padding: 105px 0 85px;
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      align-items: center;
+      gap: 55px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      background: rgba(23,105,255,.08);
+      color: var(--light);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #42E6A4;
+      box-shadow: 0 0 12px #42E6A4;
+    }
+
+    h1 {
+      font-size: clamp(42px, 6vw, 72px);
+      line-height: 1.04;
+      letter-spacing: -3px;
+      margin: 25px 0 20px;
+    }
+
+    h1 span {
+      color: var(--light);
+      text-shadow: 0 0 35px rgba(23,105,255,.35);
+    }
+
+    .hero-desc {
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 510px;
+      font-size: 15px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+
+    .hero-card {
+      min-height: 340px;
+      padding: 28px;
+      border-radius: 23px;
+      border: 1px solid rgba(112,175,255,.3);
+      background:
+        radial-gradient(circle at 80% 10%, rgba(23,105,255,.35), transparent 40%),
+        linear-gradient(145deg, rgba(16,43,80,.95), rgba(7,26,53,.95));
+      box-shadow: 0 25px 80px rgba(0,0,0,.25);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::after {
+      content: "KL";
+      position: absolute;
+      right: -5px;
+      bottom: -45px;
+      font-size: 190px;
+      font-weight: 900;
+      color: rgba(112,175,255,.06);
+      pointer-events: none;
+    }
+
+    .card-label {
+      color: var(--light);
+      font-size: 11px;
+      letter-spacing: 2px;
+      font-weight: 800;
+    }
+
+    .card-title {
+      font-size: 29px;
+      font-weight: 900;
+      line-height: 1.2;
+      margin-top: 12px;
+    }
+
+    .card-bottom {
+      border-top: 1px solid var(--border);
+      padding-top: 20px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    section { padding: 65px 0; }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+
+    .section-kicker {
+      color: var(--light);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: clamp(26px, 4vw, 37px);
+      letter-spacing: -1px;
+    }
+
+    .section-desc {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 9px;
+      line-height: 1.7;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 17px;
+    }
+
+    .service-card {
+      padding: 25px;
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      background: rgba(16,43,80,.55);
+      transition: .25s;
+    }
+
+    .service-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(112,175,255,.6);
+      background: rgba(23,65,115,.5);
+    }
+
+    .service-icon {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 13px;
+      background: rgba(23,105,255,.17);
+      font-size: 23px;
+      margin-bottom: 20px;
+    }
+
+    .service-card h3 { font-size: 17px; margin-bottom: 9px; }
+    .service-card p { color: var(--muted); font-size: 12px; line-height: 1.7; }
+
+    .membership {
+      background: linear-gradient(120deg, rgba(23,105,255,.12), rgba(16,43,80,.25));
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tiers { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
+
+    .tier {
+      padding: 22px;
+      border-radius: 16px;
+      background: rgba(7,26,53,.75);
+      border: 1px solid var(--border);
+    }
+
+    .tier h3 { font-size: 17px; margin-bottom: 10px; }
+    .tier p { font-size: 12px; color: var(--muted); line-height: 1.7; }
+    .tier small { display: block; margin-top: 17px; color: var(--light); font-weight: 800; }
+
+    .cta {
+      text-align: center;
+      padding: 65px 25px;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      background: radial-gradient(circle at top, rgba(23,105,255,.22), transparent 65%), var(--panel);
+    }
+
+    .cta p {
+      color: var(--muted);
+      margin: 13px auto 25px;
+      max-width: 480px;
+      line-height: 1.7;
+      font-size: 13px;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 27px 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    @media(max-width: 800px) {
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 76px;
+        left: 0;
+        width: 100%;
+        padding: 22px 5%;
+        background: #0A2142;
+        flex-direction: column;
+        align-items: flex-start;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .nav-links.show { display: flex; }
+      .menu-btn { display: block; }
+      .nav-actions .login-btn { display: none; }
+      .hero { grid-template-columns: 1fr; padding-top: 75px; gap: 35px; }
+      .hero-card { min-height: 270px; }
+      .grid { grid-template-columns: 1fr 1fr; }
+      .tiers { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media(max-width: 500px) {
+      .grid { grid-template-columns: 1fr; }
+      .section-head { align-items: flex-start; flex-direction: column; }
+      h1 { letter-spacing: -2px; }
+      .brand { font-size: 19px; }
+      .tiers { gap: 10px; }
+      .tier { padding: 17px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="ambient"></div>
+
+  <header>
+    <div class="container">
+      <nav>
+        <a class="brand" href="#">KL <span>EMPIRE.</span></a>
+
+        <div class="nav-links" id="navLinks">
+          <a href="#home">Home</a>
+          <a href="#services">Services</a>
+          <a href="#membership">Membership</a>
+          <a href="#reseller">Reseller</a>
+        </div>
+
+        <div class="nav-actions">
+          <a href="login.html" class="btn login-btn">Login</a>
+          <a href="register.html" class="btn btn-primary">Get Started</a>
+          <button class="btn menu-btn" id="menuBtn" aria-label="Toggle menu">☰</button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <section class="hero" id="home">
+        <div>
+          <div class="eyebrow"><span class="dot"></span> DIGITAL SERVICES ECOSYSTEM</div>
+          <h1>POWER YOUR<br><span>DIGITAL EMPIRE.</span></h1>
+          <p class="hero-desc">
+            Your all-in-one platform for game top-ups, digital services
+            and reseller opportunities. Everything you need, in one ecosystem.
+          </p>
+
+          <div class="hero-buttons">
+            <a href="#services" class="btn btn-primary">Explore Services →</a>
+            <a href="register.html" class="btn">Create Account</a>
+          </div>
+        </div>
+
+        <div class="hero-card">
+          <div>
+            <div class="card-label">WELCOME TO KL EMPIRE</div>
+            <div class="card-title">One Platform.<br>Multiple Possibilities.</div>
+          </div>
+          <div class="card-bottom">GAMING · DIGITAL · RESELLER · API</div>
+        </div>
+      </section>
+
+      <section id="services">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">OUR ECOSYSTEM</div>
+            <h2>Explore Our Services</h2>
+            <p class="section-desc">Digital solutions built into one convenient platform.</p>
+          </div>
+        </div>
+
+        <div class="grid">
+          <a href="services.html?category=game-topup" class="service-card">
+            <div class="service-icon">🎮</div>
+            <h3>Game Top-Up</h3>
+            <p>Explore digital top-up products for your favourite games.</p>
+          </a>
+
+          <a href="services.html?category=social" class="service-card">
+            <div class="service-icon">📱</div>
+            <h3>Social Media Services</h3>
+            <p>Discover available social media digital services.</p>
+          </a>
+
+          <a href="reseller.html" class="service-card">
+            <div class="service-icon">💼</div>
+            <h3>Reseller Programme</h3>
+            <p>Manage customers, orders and your reseller business.</p>
+          </a>
+
+          <a href="membership.html" class="service-card">
+            <div class="service-icon">💎</div>
+            <h3>Membership</h3>
+            <p>Access membership tiers and their available benefits.</p>
+          </a>
+
+          <a href="api.html" class="service-card">
+            <div class="service-icon">⚡</div>
+            <h3>Developer API</h3>
+            <p>Explore API tools and integration documentation.</p>
+          </a>
+
+          <a href="partnership.html" class="service-card">
+            <div class="service-icon">🤝</div>
+            <h3>Partnership</h3>
+            <p>Discover reseller, affiliate and business partnership options.</p>
+          </a>
+        </div>
+      </section>
+    </div>
+
+    <section class="membership" id="membership">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">MEMBERSHIP SYSTEM</div>
+            <h2>Choose Your Membership</h2>
+            <p class="section-desc">Different tiers, different platform benefits.</p>
+          </div>
+          <a href="membership.html" class="btn">View Details →</a>
+        </div>
+
+        <div class="tiers">
+          <div class="tier">
+            <h3>🥉 Bronze</h3>
+            <p>Essential access to the platform.</p>
+            <small>ENTRY TIER</small>
+          </div>
+          <div class="tier">
+            <h3>🥈 Silver</h3>
+            <p>More benefits for growing users.</p>
+            <small>STANDARD TIER</small>
+          </div>
+          <div class="tier">
+            <h3>🥇 Gold</h3>
+            <p>Enhanced benefits and access.</p>
+            <small>PREMIUM TIER</small>
+          </div>
+          <div class="tier">
+            <h3>💠 Platinum</h3>
+            <p>Eligible for advanced platform tools.</p>
+            <small>TOP TIER</small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="container">
+      <section id="reseller">
+        <div class="cta">
+          <div class="section-kicker">BUILD WITH US</div>
+          <h2>Ready to Join KL EMPIRE?</h2>
+          <p>Create an account to explore services, manage your orders and discover reseller opportunities.</p>
+          <a href="register.html" class="btn btn-primary">Create Your Account →</a>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <div><strong>KL EMPIRE.</strong> — DIGITAL SERVICES ECOSYSTEM</div>
+      <div>© <span id="year"></span> KL EMPIRE. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script>
+    const menuBtn = document.getElementById("menuBtn");
+    const navLinks = document.getElementById("navLinks");
+
+    menuBtn.addEventListener("click", () => {
+      navLinks.classList.toggle("show");
+    });
+
+    navLinks.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", () => navLinks.classList.remove("show"));
+    });
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
