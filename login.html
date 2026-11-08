@@ -1,0 +1,213 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#071A35">
+  <title>Login | KL EMPIRE</title>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      color: #fff;
+      background:
+        radial-gradient(circle at 80% 10%, rgba(23,105,255,.2), transparent 35%),
+        #071A35;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 430px;
+      padding: 35px;
+      border-radius: 22px;
+      border: 1px solid rgba(112,175,255,.2);
+      background: rgba(16,43,80,.72);
+      box-shadow: 0 25px 80px rgba(0,0,0,.3);
+    }
+
+    .brand {
+      text-align: center;
+      font-size: 27px;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
+
+    .brand span { color: #70AFFF; }
+
+    .subtitle {
+      text-align: center;
+      color: #9CB2D0;
+      font-size: 13px;
+      margin-top: 10px;
+      margin-bottom: 30px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      margin-bottom: 9px;
+      color: #D5E5FA;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(112,175,255,.2);
+      background: #071A35;
+      color: white;
+      outline: none;
+      margin-bottom: 20px;
+    }
+
+    input:focus { border-color: #1769FF; }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      border: 0;
+      border-radius: 10px;
+      background: #1769FF;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    button:hover { background: #3980ff; }
+    button:disabled { opacity: .6; cursor: not-allowed; }
+
+    #message {
+      font-size: 12px;
+      text-align: center;
+      margin-top: 17px;
+      line-height: 1.6;
+    }
+
+    .links {
+      text-align: center;
+      font-size: 12px;
+      color: #9CB2D0;
+      margin-top: 22px;
+      line-height: 2;
+    }
+
+    a { color: #70AFFF; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+
+<body>
+  <main class="login-card">
+    <div class="brand">KL <span>EMPIRE.</span></div>
+    <p class="subtitle">Welcome back. Sign in to your account.</p>
+
+    <form id="loginForm">
+      <label for="email">EMAIL ADDRESS</label>
+      <input
+        type="email"
+        id="email"
+        placeholder="Enter your email"
+        autocomplete="email"
+        required
+      >
+
+      <label for="password">PASSWORD</label>
+      <input
+        type="password"
+        id="password"
+        placeholder="Enter your password"
+        autocomplete="current-password"
+        required
+      >
+
+      <button type="submit" id="loginBtn">SIGN IN →</button>
+    </form>
+
+    <p id="message" role="status"></p>
+
+    <div class="links">
+      Don't have an account? <a href="register.html">Create account</a>
+      <br>
+      <a href="index.html">← Back to homepage</a>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+
+  <script>
+    const form = document.getElementById("loginForm");
+    const message = document.getElementById("message");
+    const loginBtn = document.getElementById("loginBtn");
+
+    const config = window.KL_CONFIG;
+
+    if (!config || !config.SUPABASE_URL || !config.SUPABASE_KEY) {
+      message.textContent = "Configuration error. Please contact support.";
+      message.style.color = "#ff7777";
+      loginBtn.disabled = true;
+    } else {
+      const supabase = window.supabase.createClient(
+        config.SUPABASE_URL,
+        config.SUPABASE_KEY
+      );
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+
+        loginBtn.disabled = true;
+        loginBtn.textContent = "SIGNING IN...";
+        message.textContent = "";
+
+        try {
+          const { data, error } = await supabase.auth.signInWithPassword({
+            email,
+            password
+          });
+
+          if (error) throw error;
+
+          const { data: profile, error: profileError } = await supabase
+            .from("profiles")
+            .select("account_role, membership_tier")
+            .eq("id", data.user.id)
+            .single();
+
+          if (profileError || !profile) {
+            throw new Error("Account profile not found. Please contact support.");
+          }
+
+          message.style.color = "#42E6A4";
+          message.textContent = "Login successful. Redirecting...";
+
+          if (profile.account_role === "admin") {
+            window.location.href = "admin.html";
+          } else if (profile.account_role === "reseller") {
+            window.location.href = "reseller.html";
+          } else {
+            window.location.href = "dashboard.html";
+          }
+
+        } catch (error) {
+          message.style.color = "#ff7777";
+          message.textContent = error.message || "Unable to sign in.";
+          loginBtn.disabled = false;
+          loginBtn.textContent = "SIGN IN →";
+        }
+      });
+    }
+  </script>
+</body>
+</html>
